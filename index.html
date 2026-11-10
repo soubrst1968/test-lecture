@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#E3001B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Test 24">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Test de lecture</title>
+<style>
+  :root {
+    --red: #E3001B;
+    --ink: #f5f5f5;
+    --muted: #b8b8b8;
+    --line: #2a2a2a;
+    --ok: #3ddc84;
+    --ko: #ff6b7a;
+    --wait: #8a8a8a;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: #000; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: #000;
+    color: var(--ink);
+    font: 17px/1.45 -apple-system, system-ui, "Helvetica Neue", Arial, sans-serif;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 32px);
+  }
+  .band {
+    background: var(--red);
+    padding: calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 18px) 14px calc(env(safe-area-inset-left) + 18px);
+  }
+  .band h1 { margin: 0; font-size: 28px; line-height: 1.1; font-weight: 900; letter-spacing: -0.01em; }
+  .band p { margin: 4px 0 0; font-size: 15px; }
+  main {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0 calc(env(safe-area-inset-right) + 18px) 0 calc(env(safe-area-inset-left) + 18px);
+  }
+  .check { display: flex; gap: 14px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .n {
+    flex: none; width: 36px; height: 36px; display: grid; place-items: center;
+    background: var(--red); font: 700 20px var(--mono);
+  }
+  .body { flex: 1; min-width: 0; }
+  .what { margin: 0; font-size: 15px; color: var(--muted); }
+  .v {
+    margin: 4px 0 6px; padding-left: 12px; border-left: 6px solid var(--wait);
+    font-size: 26px; line-height: 1.15; font-weight: 800;
+  }
+  .v.ok { border-left-color: var(--ok); }
+  .v.ko { border-left-color: var(--ko); }
+  .d { margin: 0 0 8px; color: var(--muted); }
+  .t { margin: 0; font: 14px/1.5 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+  .zone { height: 280px; min-width: 200px; margin: 12px 0; background: #111; }
+  .zone iframe { display: block; width: 100%; height: 280px; border: 0; }
+  .ph { margin: 0; padding: 16px; color: var(--muted); }
+  .btn {
+    display: block; width: 100%; min-height: 52px; margin: 10px 0 0; padding: 13px 16px;
+    border: 2px solid #fff; border-radius: 0; background: #000; color: #fff;
+    font-family: inherit; font-size: 18px; font-weight: 800; line-height: 1.2;
+    text-align: center; text-decoration: none;
+    -webkit-appearance: none; appearance: none;
+  }
+  .btn.red { background: var(--red); border-color: var(--red); }
+  .btn:focus-visible { outline: 3px solid var(--ok); outline-offset: 3px; }
+  #line {
+    margin: 10px 0; padding: 14px; background: #111; border: 2px solid var(--red);
+    font: 16px/1.5 var(--mono); overflow-wrap: anywhere; user-select: text; -webkit-user-select: text;
+  }
+  noscript { display: block; padding: 18px; background: #fff; color: #000; font-weight: 800; }
+</style>
+</head>
+<body>
+<header class="band">
+  <h1>Test de lecture</h1>
+  <p>Page technique : elle sert seulement à vérifier la lecture d'une vidéo.</p>
+</header>
+<noscript>Cette page a besoin de JavaScript pour fonctionner.</noscript>
+<main>
+  <section class="check">
+    <span class="n">1</span>
+    <div class="body">
+      <p class="what">Comment la page est ouverte</p>
+      <p class="v" id="v1">Vérification…</p>
+      <p class="d" id="d1"></p>
+      <p class="t" id="t1"></p>
+    </div>
+  </section>
+
+  <section class="check">
+    <span class="n">2</span>
+    <div class="body">
+      <p class="what">Lecture dans la page, avec le son</p>
+      <div class="zone"><div id="player"><p class="ph">Chargement du lecteur…</p></div></div>
+      <p class="v" id="v2">Lecteur en attente</p>
+      <p class="d" id="d2">Touche le triangle de la vidéo : rien ne démarre tout seul.</p>
+      <p class="t" id="t2"></p>
+      <button class="btn" id="backup" type="button">Essayer la vidéo de secours</button>
+    </div>
+  </section>
+
+  <section class="check">
+    <span class="n">3</span>
+    <div class="body">
+      <p class="what">Départ et arrêt</p>
+      <p class="v" id="v3">Pas encore mesuré</p>
+      <p class="d" id="d3">Demandé : départ à 0:30, arrêt à 2:30. Laisse jouer jusqu'à l'arrêt (2 minutes).</p>
+      <p class="t" id="t3"></p>
+    </div>
+  </section>
+
+  <section class="check">
+    <span class="n">4</span>
+    <div class="body">
+      <p class="what">Erreur du lecteur</p>
+      <p class="v" id="v4">Aucune erreur pour l'instant</p>
+      <p class="d" id="d4"></p>
+    </div>
+  </section>
+
+  <section class="check">
+    <span class="n">5</span>
+    <div class="body">
+      <p class="what">Retour depuis YouTube</p>
+      <p class="v" id="v5">Pas encore parti</p>
+      <p class="d" id="d5">Touche le bouton, regarde la vidéo sur YouTube, puis reviens à cette page.</p>
+      <a class="btn red" id="yt" href="https://www.youtube.com/watch?v=dXi3LfFxQ2o&amp;t=30s" target="_blank" rel="noopener">Voir sur YouTube</a>
+    </div>
+  </section>
+
+  <section class="check">
+    <span class="n">&#8801;</span>
+    <div class="body">
+      <p class="what">Ta ligne de résultat</p>
+      <p id="line"></p>
+      <p class="d">Corrige ce qui diffère de ce que tu as vu, remplace les « ? » (y compris la version d'iOS), puis recopie la ligne à la main.</p>
+      <p class="t" id="ua"></p>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var VIDEO = 'dXi3LfFxQ2o';
+  var PLAYLIST = 'PLRwgXecE0bRPP60KbOa6OUHma3Xx9Ms4O';
+  var START = 30, END = 150, BACKUP_INDEX = 2;
+  var LEFT_KEY = 'l0-left-for-youtube', MAX_AGE = 30 * 60 * 1000;
+  var MEANING = {
+    2: 'Le lecteur a reçu une valeur de paramètre invalide.',
+    5: 'Ce contenu ne peut pas être lu par un lecteur HTML5.',
+    100: 'La vidéo est introuvable.',
+    101: "Le propriétaire de la vidéo interdit sa lecture dans une page tierce.",
+    150: "Le propriétaire de la vidéo interdit sa lecture dans une page tierce (même cas que 101).",
+    153: "La requête n'envoie pas l'en-tête Referer : YouTube refuse d'identifier la page.",
+    api: "Le script du lecteur YouTube ne s'est pas chargé (réseau coupé ou bloqué ?)."
+  };
+  var STATES = {
+    '-1': ['Lecteur prêt, pas lancé', 'wait'], 0: ['Vidéo terminée', 'ok'], 1: ['En lecture', 'ok'],
+    2: ['En pause', 'wait'], 3: ['Chargement de la vidéo…', 'wait'], 5: ['Vidéo prête : touche le triangle', 'wait']
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var S = {
+    standalone: null, player: null, state: null, everPlayed: false, backup: false, videoId: VIDEO,
+    pos: 0, dur: 0, startObs: null, stopObs: null, err: null, left: false, back: null
+  };
+
+  function fmt(s) {
+    s = Math.max(0, Math.round(s));
+    return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+  }
+  function put(id, text, cls) {
+    var el = $(id);
+    if (el.textContent !== text) { el.textContent = text; }
+    if (cls !== undefined) { el.className = 'v ' + cls; }
+  }
+
+  // Storage: sessionStorage first (as asked), localStorage as a fallback if iOS drops it on relaunch.
+  function save(v) {
+    try { sessionStorage.setItem(LEFT_KEY, v); } catch (e) { /* ignore */ }
+    try { localStorage.setItem(LEFT_KEY, v); } catch (e) { /* ignore */ }
+  }
+  function load() {
+    var v = null;
+    try { v = sessionStorage.getItem(LEFT_KEY); } catch (e) { /* ignore */ }
+    if (!v) { try { v = localStorage.getItem(LEFT_KEY); } catch (e) { /* ignore */ } }
+    return v;
+  }
+  function clear() {
+    try { sessionStorage.removeItem(LEFT_KEY); } catch (e) { /* ignore */ }
+    try { localStorage.removeItem(LEFT_KEY); } catch (e) { /* ignore */ }
+  }
+
+  function render() {
+    // 1. Launch mode
+    if (S.standalone) {
+      put('v1', "Ouverte depuis l'icône", 'ok');
+      put('d1', "Aucune barre de Safari en haut ni en bas ? Alors c'est bon. Note aussi la couleur de l'écran au lancement : rouge, blanc ou noir.");
+    } else {
+      put('v1', 'Dans Safari', 'ko');
+      put('d1', "Ferme Safari, puis ouvre la page avec l'icône de l'écran d'accueil (voir le guide).");
+    }
+    put('t1', 'navigator.standalone = ' + String(window.navigator.standalone) +
+      ' · display-mode standalone = ' + String(S.displayMode));
+
+    // 2. Player
+    var st = S.state === null ? null : STATES[S.state];
+    var label = st ? st[0] : 'Lecteur en attente';
+    put('v2', label, st ? st[1] : 'wait');
+    put('t2', 'Vidéo : ' + S.videoId + (S.backup ? ' (secours)' : ' (principale)') +
+      ' · durée ' + (S.dur > 0 ? fmt(S.dur) : '?') + ' · position ' + fmt(S.pos));
+    $('yt').href = 'https://www.youtube.com/watch?v=' + encodeURIComponent(S.videoId) + '&t=' + START + 's';
+
+    // 3. Bounds
+    if (S.startObs === null) {
+      put('v3', 'Pas encore mesuré', 'wait');
+    } else {
+      var startOk = Math.abs(S.startObs - START) <= 3;
+      var stopOk = S.stopObs !== null && Math.abs(S.stopObs - END) <= 3;
+      var txt = 'Départ à ' + fmt(S.startObs) + ', arrêt ' + (S.stopObs === null ? 'pas encore' : 'à ' + fmt(S.stopObs));
+      put('v3', txt, startOk && stopOk ? 'ok' : (S.stopObs === null && startOk ? 'wait' : 'ko'));
+    }
+    put('d3', S.backup
+      ? "Demandé : départ à 0:30. L'arrêt à 2:30 n'est pas demandé à la vidéo de secours."
+      : "Demandé : départ à 0:30, arrêt à 2:30. Laisse jouer jusqu'à l'arrêt (2 minutes).");
+    put('t3', "tolérance : 3 secondes (le départ peut tomber sur l'image clé la plus proche)");
+
+    // 4. Error
+    if (S.err === null) {
+      put('v4', "Aucune erreur pour l'instant", 'ok');
+      put('d4', '');
+    } else {
+      put('v4', 'Erreur ' + S.err, 'ko');
+      put('d4', MEANING[S.err] || 'Code inconnu : à noter tel quel.');
+    }
+
+    // 5. Return
+    if (S.back) {
+      put('v5', S.back === 'open' ? 'Page restée ouverte' : 'Page rechargée', 'ok');
+    } else if (S.left) {
+      put('v5', 'Parti sur YouTube…', 'wait');
+    }
+    put('line', resultLine());
+  }
+
+  function resultLine() {
+    var c1 = S.standalone ? 'oui (lancement ?)' : 'non (dans Safari)';
+    var c2 = S.everPlayed ? 'oui' : '?';
+    if (S.backup) { c2 += ' (vidéo de secours)'; }
+    var c3 = S.startObs === null ? '?' :
+      'départ ' + fmt(S.startObs) + ' arrêt ' + (S.stopObs === null ? '?' : fmt(S.stopObs));
+    var c4 = S.err === null ? 'aucune erreur' : 'erreur ' + S.err;
+    var c5 = S.back === 'open' ? 'page restée ouverte' : (S.back === 'reload' ? 'page rechargée' : '?');
+    return 'Lis docs/pilotage.md. Résultat du test L0 : 1 ' + c1 + ', 2 ' + c2 + ', 3 ' + c3 +
+      ', 4 ' + c4 + ', 5 ' + c5 + ' ; iPhone ?, iOS ?';
+  }
+
+  // Player events
+  function onState(e) {
+    var previous = S.state;
+    S.state = e.data;
+    readPlayer();
+    if (e.data === 1) {
+      if (previous === 0) { S.startObs = null; S.stopObs = null; }
+      S.everPlayed = true;
+      if (S.startObs === null) { S.startObs = S.pos; }
+    } else if (e.data === 0 || (e.data === 2 && S.pos >= END - 3 && !S.backup)) {
+      if (S.startObs !== null) { S.stopObs = S.pos; }
+    }
+    render();
+  }
+  function onError(e) { S.err = e.data; render(); }
+
+  function readPlayer() {
+    var p = S.player;
+    if (!p || !p.getCurrentTime) { return; }
+    try {
+      S.pos = p.getCurrentTime() || 0;
+      S.dur = p.getDuration() || 0;
+      var m = /[?&]v=([^&]+)/.exec(p.getVideoUrl() || '');
+      if (m) { S.videoId = m[1]; }
+    } catch (e) { /* player not ready */ }
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    if (S.err === 'api') { S.err = null; }
+    var vars = { playsinline: 1, rel: 0, enablejsapi: 1, start: START, end: END };
+    if (/^https?:$/.test(location.protocol)) { vars.origin = location.origin; }
+    S.player = new YT.Player('player', {
+      videoId: VIDEO,
+      playerVars: vars,
+      events: { onStateChange: onState, onError: onError }
+    });
+  };
+
+  function apiFailed() {
+    if (!(window.YT && window.YT.Player)) { S.err = 'api'; render(); }
+  }
+
+  $('backup').addEventListener('click', function () {
+    if (!S.player || !S.player.cuePlaylist) { S.err = 'api'; render(); return; }
+    S.err = null; S.startObs = null; S.stopObs = null; S.backup = true;
+    // cuePlaylist, object syntax (IFrame Player API reference)
+    S.player.cuePlaylist({ listType: 'playlist', list: PLAYLIST, index: BACKUP_INDEX, startSeconds: START });
+    render();
+  });
+
+  // Return from YouTube
+  $('yt').addEventListener('click', function () {
+    S.left = true; S.back = null;
+    save(String(Date.now()));
+    render();
+  });
+  function comeBack() {
+    if (S.left && !document.hidden) {
+      S.left = false; S.back = 'open'; clear(); render();
+    }
+  }
+  document.addEventListener('visibilitychange', comeBack);
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) { S.left = true; }
+    comeBack();
+  });
+
+  // Start
+  var displayMode = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  S.displayMode = !!displayMode;
+  S.standalone = window.navigator.standalone === true || S.displayMode;
+
+  var saved = load();
+  if (saved && Date.now() - Number(saved) < MAX_AGE) { S.back = 'reload'; }
+  clear();
+
+  var ua = /OS (\d+)[_.](\d+)/.exec(navigator.userAgent);
+  $('ua').textContent = ua
+    ? 'Safari annonce iOS ' + ua[1] + '.' + ua[2] + ' : cette valeur peut ne pas être la vraie, lis Réglages.'
+    : "Safari n'annonce pas de version d'iOS : lis-la dans Réglages.";
+
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  tag.async = true;
+  tag.onerror = apiFailed;
+  document.head.appendChild(tag);
+  setTimeout(apiFailed, 10000);
+
+  setInterval(function () { readPlayer(); render(); }, 500);
+  render();
+}());
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "Test de lecture",
+  "short_name": "Test 24",
+  "lang": "fr",
+  "display": "standalone",
+  "start_url": "./",
+  "scope": "./",
+  "background_color": "#E3001B",
+  "theme_color": "#E3001B",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
